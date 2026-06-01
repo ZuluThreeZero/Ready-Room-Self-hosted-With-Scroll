@@ -143,7 +143,10 @@ $automation = [FlaUI.UIA3.UIA3Automation]::new()
 
 Start-Sleep -Milliseconds 500;
 [FlaUI.Core.Input.Keyboard]::Type([FlaUI.Core.WindowsAPI.VirtualKeyShort]::DOWN)
-(Poll { (Get-Process DCS_World_Server_modular.tmp).Id | ForEach-Object { [FlaUI.Core.Application]::Attach($_) } | ForEach-Object { $_.GetAllTopLevelWindows( $automation ) } | ForEach-Object { $_.SetForeground(); $_ } | ForEach-Object { Nested-Children($_) } | Where-Object { $_.Name -eq $terrain } } { param($i) $i.Count -ne 0 } $interval $timeout $delay $reportingInterval).Click("true")
+$terrainElement = (Poll { (Get-Process DCS_World_Server_modular.tmp).Id | ForEach-Object { [FlaUI.Core.Application]::Attach($_) } | ForEach-Object { $_.GetAllTopLevelWindows( $automation ) } | ForEach-Object { $_.SetForeground(); $_ } | ForEach-Object { Nested-Children($_) } | Where-Object { $_.Name -eq $terrain } } { param($i) $i.Count -ne 0 } $interval $timeout $delay $reportingInterval)
+$terrainElement.Patterns.ScrollItem.Pattern.ScrollIntoView()
+Start-Sleep -Milliseconds 500;
+$terrainElement.Click("true")
 
 (Poll { (Get-Process DCS_World_Server_modular.tmp).Id | ForEach-Object { [FlaUI.Core.Application]::Attach($_) } | ForEach-Object { $_.GetAllTopLevelWindows( $automation ) } | ForEach-Object { $_.SetForeground(); $_ } | ForEach-Object { Nested-Children($_) } | Where-Object { $_.Name -eq "Next" } } { param($i) $i.Count -ne 0 } $interval $timeout $delay $reportingInterval).Click("true")
 (Poll { (Get-Process DCS_World_Server_modular.tmp).Id | ForEach-Object { [FlaUI.Core.Application]::Attach($_) } | ForEach-Object { $_.GetAllTopLevelWindows( $automation ) } | ForEach-Object { $_.SetForeground(); $_ } | ForEach-Object { Nested-Children($_) } | Where-Object { $_.Name -eq "Next" } } { param($i) $i.Count -ne 0 } $interval $timeout $delay $reportingInterval).Click("true")
