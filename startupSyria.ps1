@@ -5,6 +5,14 @@
 # Source config
 . C:\config.ps1
 
+# Check if DCS is already installed, if so just launch the server and exit
+if (Test-Path "Z:\DCS World Server\bin\DCS_server.exe") {
+    Write-Host "DCS already installed, skipping setup and launching server directly."
+    cd "Z:\DCS World Server"
+    bin\DCS_server.exe
+    exit
+}
+
 $installStart = [System.DateTime]::Now
 
 Write-Host "Started: $installStart"
