@@ -5,14 +5,6 @@
 # Source config
 . C:\config.ps1
 
-# Sentinel check - if DCS is already installed, just launch the server and exit
-if (Test-Path "C:\dcs_installed.txt") {
-    Write-Host "DCS already installed, skipping setup and launching server directly."
-    cd "Z:\DCS World Server"
-    bin\DCS_server.exe
-    exit
-}
-
 $installStart = [System.DateTime]::Now
 
 Write-Host "Started: $installStart"
@@ -166,8 +158,6 @@ $timeout = [System.TimeSpan]::FromMilliseconds(1000 * 60)
 
 (Poll { (Get-Process DCS_World_Server_modular.tmp).Id | ForEach-Object { [FlaUI.Core.Application]::Attach($_) } | ForEach-Object { $_.GetAllTopLevelWindows( $automation ) } | ForEach-Object { $_.SetForeground(); $_ } | ForEach-Object { Nested-Children($_) } | Where-Object { $_.Name -eq "Finish" } } { param($i) $i.Count -ne 0 } $interval $timeout $delay $reportingInterval).Click("true")
 
-(Poll { (Get-Process DCS_Updater).Id | ForEach-Object { [FlaUI.Core.Application]::Attach($_) } | ForEach-Object { $_.GetAllTopLevelWindows( $automation ) } | ForEach-Object { $_.SetForeground(); $_ } | ForEach-Object { Nested-Children($_) } | Where-Object { $_.Name -eq "Proceed" } } { param($i) $i.Count -ne 0 } $interval $timeout $delay $reportingInterval).Click("true")
-
 $interval = [System.TimeSpan]::FromMilliseconds(5000)
 # 120min timeout
 $timeout = [System.TimeSpan]::FromMilliseconds(1000 * 60 * 120)
@@ -247,6 +237,3 @@ bin\DCS_server.exe
 
 Write-Host "Completed"
 ([System.DateTime]::Now).subtract($installStart)
-
-# Mark installation as complete - subsequent boots will skip setup and launch directly
-echo "installed" | Out-File -Encoding ascii -Filepath "C:\dcs_installed.txt"
