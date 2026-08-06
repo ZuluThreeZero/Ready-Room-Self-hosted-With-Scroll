@@ -5,6 +5,14 @@
 # Source config
 . C:\config.ps1
 
+# Sentinel check - if DCS is already installed, just launch the server and exit
+if (Test-Path "C:\dcs_installed.txt") {
+    Write-Host "DCS already installed, skipping setup and launching server directly."
+    cd "Z:\DCS World Server"
+    bin\DCS_server.exe
+    exit
+}
+
 $installStart = [System.DateTime]::Now
 
 Write-Host "Started: $installStart"
@@ -241,3 +249,6 @@ bin\DCS_server.exe
 
 Write-Host "Completed"
 ([System.DateTime]::Now).subtract($installStart)
+
+# Mark installation as complete - subsequent boots will skip setup and launch directly
+echo "installed" | Out-File -Encoding ascii -Filepath "C:\dcs_installed.txt"
